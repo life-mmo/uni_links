@@ -47,6 +47,7 @@ static id _instance;
   if (_eventSink) _eventSink(_latestLink);
 }
 
+//푸시로 인해 시작되었을때 푸시의 link 들고옴
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
@@ -62,14 +63,6 @@ static id _instance;
   return YES;
 }
 
-- (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    NSString *link = userInfo[@"link"];
-    if (link != nil) {
-        NSLog(@"Push link received! : %s", link.UTF8String);
-        self.latestLink = link;
-    }
-    return YES;
-}
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
