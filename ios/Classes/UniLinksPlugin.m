@@ -50,9 +50,25 @@ static id _instance;
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
+  if (url == nil) {
+    NSDictionary *remoteNotification = (NSDictionary *)launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification != nil && remoteNotification[@"link"] != nil) {
+        url = [NSURL URLWithString:remoteNotification[@"link"]];
+    }
+  }
+    
   self.initialLink = [url absoluteString];
   self.latestLink = self.initialLink;
   return YES;
+}
+
+- (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSString *link = userInfo[@"link"];
+    if (link != nil) {
+        NSLog(@"Push link received! : %s", link.UTF8String);
+        self.latestLink = link;
+    }
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application
