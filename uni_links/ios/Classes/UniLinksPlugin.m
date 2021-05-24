@@ -47,13 +47,22 @@ static id _instance;
   if (_eventSink) _eventSink(_latestLink);
 }
 
+//푸시로 인해 시작되었을때 푸시의 link 들고옴
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
+  if (url == nil) {
+    NSDictionary *remoteNotification = (NSDictionary *)launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification != nil && remoteNotification[@"link"] != nil) {
+        url = [NSURL URLWithString:remoteNotification[@"link"]];
+    }
+  }
+    
   self.initialLink = [url absoluteString];
   self.latestLink = self.initialLink;
   return YES;
 }
+
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
